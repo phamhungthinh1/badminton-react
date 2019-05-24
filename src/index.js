@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TopBar from './views/TopBar/TopBar';
+import Home from './views/Home/Home';
+import RouteService from './Router/RouteService';
 import './index.css';
 
-ReactDOM.render(<TopBar />, document.getElementById('root')
+ReactDOM.render(<Home />, document.getElementById('root')
 );
