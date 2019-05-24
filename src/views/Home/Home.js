@@ -14,7 +14,6 @@ class Home extends Component {
 
         return(
             <div>
-                <TopBar />
                 <Carousel />
                 <br />
                 <ProductLine {...person}/>

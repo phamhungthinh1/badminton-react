@@ -3,11 +3,13 @@ import TopBar from '../TopBar/TopBar'
 import PageDetailBody from './PageDetailBody';
 
 class PageDetail extends Component {
+    componentWillMount() {
+        console.log(this.props.match.params.id);
+    }
     render() {
         return (
             <div>
-                <TopBar />
-                <PageDetailBody />
+                <PageDetailBody {...this.props}/>
             </div>
         )
     }
