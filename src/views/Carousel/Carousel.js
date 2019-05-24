@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
-import slideshow_1 from '../../../public/image/slideshow_1.jpg';
-import slideshow_2 from '../../../public/image/slideshow_2.jpg';
-import slideshow_3 from '../../../public/image/slideshow_3.jpg';
+import banner1 from '../../../public/image/banner1.jpg';
+import banner2 from '../../../public/image/banner2.jpg';
+import banner3 from '../../../public/image/banner3.jpg';
+import banner4 from '../../../public/image/banner4.jpg';
+import banner5 from '../../../public/image/product.jpg';
+import './Carousel.css';
 
 class Carousel extends Component {
 
@@ -15,18 +18,26 @@ class Carousel extends Component {
                         <li className="active" data-target="#banner" data-slide-to="0"></li>
                         <li data-target="#banner" data-slide-to="1"></li>
                         <li data-target="#banner" data-slide-to="2"></li>
+                        <li data-target="#banner" data-slide-to="3"></li>
+                        <li data-target="#banner" data-slide-to="4"></li>
                     </ol>
                     <div className="carousel-inner">
                         <div className="carousel-item active" data-interval="3000">
-                            <img src={slideshow_1} alt="Sale" className="d-block w-100" />
+                            <img src={banner1} alt="Sale" className="d-block w-100 imgSize" />
                         </div>
 
                         <div className="carousel-item" data-interval="3000">
-                            <img src={slideshow_2} alt="Sale" className="d-block w-100" />
+                            <img src={banner2} alt="Sale" className="d-block w-100 imgSize" />
                         </div>
 
                         <div className="carousel-item" data-interval="3000">
-                            <img src={slideshow_3} alt="Sale" className="d-block w-100" />
+                            <img src={banner3} alt="Sale" className="d-block w-100 imgSize" />
+                        </div>
+                        <div className="carousel-item" data-interval="3000">
+                            <img src={banner4} alt="Sale" className="d-block w-100 imgSize" />
+                        </div>
+                        <div className="carousel-item" data-interval="3000">
+                            <img src={banner5} alt="Sale" className="d-block w-100 imgSize" />
                         </div>
                     </div>
 

@@ -6,21 +6,18 @@ import ProductLine from '../ProductLine/ProductLine';
 class Home extends Component {
 
     render() {
-        const person = {
-            name: "xgqfrms",
-            age: 23,
-            country: "China"
-        };
+        // const person = {
+        //     name: "xgqfrms",
+        //     age: 23,
+        //     country: "China"
+        // };
 
         return(
             <div>
                 <Carousel />
                 <br />
-                <ProductLine {...person}/>
-                <br />
                 <ProductLine />
-                <br />
-                <ProductLine />
+                {/* {...person} */}
                 <br />
             </div>
         )
