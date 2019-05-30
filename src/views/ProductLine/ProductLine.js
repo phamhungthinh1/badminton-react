@@ -10,7 +10,6 @@ class ProductLine extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            products: Array().fill(null)
         }
 
         this.goToDetail = this.goToDetail.bind(this);
@@ -20,22 +19,11 @@ class ProductLine extends Component {
         window.location = "http://localhost:3000/detail/" + id;
     }
 
-    componentDidMount() {
-        axios.get('http://localhost:8080/products/')
-            .then(response => {
-                const dataProduct = response.data;
-                console.log(dataProduct);
-                this.setState({ products: dataProduct });
-                console.log(this.state.products)
-            })
-            .catch(error => {
-                console.log(error);
-            });
+    componentDidMount() {  
     }
 
     render() {
-        // const {name, age, country} = {...this.props};
-        const listProduct = this.state.products.map((product) =>
+        const listProduct = this.props.data.map((product) =>
             <div className="card product col-md-3 ml-1 mr-1">
                 <img className="mt-3 card-img-top" src={product1} alt="Card image cap" />
                 <div className="card-body">
@@ -49,7 +37,7 @@ class ProductLine extends Component {
         return (
             <div className="container-fluid col-md-11">
                 <div>
-                    <p className="title">Khuyen mai </p>
+                    <p className="title">{this.props.title}</p>
                     {/* {name} {age} {country} */}
                 </div>
                 {listProduct}
