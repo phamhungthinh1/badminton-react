@@ -21,8 +21,8 @@ class ProductLine extends Component {
     }
 
     setTitle(title) {
-        alert("title " + title);
-        console.log(this.props);
+        // alert("title " + title);
+        // console.log(this.props);
         this.props.setTitleRedux(title);
     }
 
@@ -46,7 +46,7 @@ class ProductLine extends Component {
     render() {
         const listProduct = this.props.data.map((product) =>
             <div className="card product col-md-3 ml-1 mr-1">
-                <img className="mt-3 card-img-top" src={product1} alt="Card image cap" />
+                <img className="mt-3 card-img-top" src={product.image[0].url} alt="Card image cap" />
                 <div className="card-body">
                     <h5 className="card-title">{product.name}</h5>
                     <p className="card-text">{product.price} VND</p>
@@ -59,11 +59,11 @@ class ProductLine extends Component {
         return (
             <div className="container-fluid col-md-11">
                 <div>
-                    <Row>
-                        <Col>
+                    <Row className="row">
+                        <Col className="col-md-3">
                             <p className="title">{this.props.title}</p>
                         </Col>
-                        <Col>
+                        <Col className="offset-md-7">
                             {/* <Redirect to={{
                                 pathname: "/product",
                                 state: { title: this.props.title }
