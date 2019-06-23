@@ -2,16 +2,22 @@ import React, { Component } from 'react';
 import Routes from './router';
 import { Switch, Route, BrowserRouter as  Router, Link} from 'react-router-dom';
 import TopBar from './views/TopBar/TopBar';
+import {store} from './redux/store/store';
+import { Provider } from 'react-redux';
 
 class App extends Component {
   render() {
     return (
+      <Provider store={store}>
       <div>
         <TopBar />
+        
         <Router>
           <Switch>{this.showContentMenus(Routes)}</Switch>
         </Router>
+        
       </div>
+      </Provider>
     )
   };
   showContentMenus = (routes) => {     

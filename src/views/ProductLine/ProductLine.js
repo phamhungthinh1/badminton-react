@@ -3,6 +3,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import product1 from '../../../public/image/product2.jpeg';
 import './product.css';
 import axios from 'axios';
+import { Row, Col, Button } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 
 class ProductLine extends Component {
@@ -13,13 +16,31 @@ class ProductLine extends Component {
         }
 
         this.goToDetail = this.goToDetail.bind(this);
+        this.viewAll = this.viewAll.bind(this);
+        this.setTitle = this.setTitle.bind(this);
+    }
+
+    setTitle(title) {
+        alert("title " + title);
+        console.log(this.props);
+        this.props.setTitleRedux(title);
     }
 
     goToDetail(id) {
         window.location = "http://localhost:3000/detail/" + id;
     }
 
-    componentDidMount() {  
+    viewAll(title) {
+        // this.props.history.push({
+        //     pathname: '/product',
+        //     state: { title: this.props.title }
+        // })
+        // console.log(this.props.title);
+        window.location = "http://localhost:3000/product?title=" + title;
+        // return "http://localhost:3000/product?title=" + title;
+    }
+
+    componentDidMount() {
     }
 
     render() {
@@ -34,10 +55,26 @@ class ProductLine extends Component {
                 </div>
             </div>
         );
+        // console.log(this.props.title);
         return (
             <div className="container-fluid col-md-11">
                 <div>
-                    <p className="title">{this.props.title}</p>
+                    <Row>
+                        <Col>
+                            <p className="title">{this.props.title}</p>
+                        </Col>
+                        <Col>
+                            {/* <Redirect to={{
+                                pathname: "/product",
+                                state: { title: this.props.title }
+                            }}> */}
+                            <Link to="/product" onClick={() => this.setTitle(this.props.title)}>view all</Link>
+                            {/* view all</Link> */}
+                            {/* <a href="" onClick={() => this.viewAll(this.props.title)}>aaaa</a> */}
+                            {/* <button className="offset-md-9" onClick={this.viewAll}>view all</button> */}
+                            {/* </Redirect> */}
+                        </Col>
+                    </Row>
                     {/* {name} {age} {country} */}
                 </div>
                 {listProduct}
@@ -49,4 +86,20 @@ class ProductLine extends Component {
     }
 }
 
-export default ProductLine;
+const mapStateToProps = (state) => {
+  return {
+    product: state.product
+  }
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+      setTitleRedux: (title) => {
+        dispatch({
+          type: "SET_TITLE",
+          payload: title
+        });
+      }
+    }
+  }
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductLine);
