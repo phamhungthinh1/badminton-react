@@ -17,14 +17,13 @@ class ProductLine extends Component {
     this.setTitle = this.setTitle.bind(this);
   }
 
-  setTitle(title) {
-    alert("title " + title);
-    console.log(this.props);
-    this.props.setTitleRedux(title);
-  }
-
   goToDetail(id) {
     window.location = "http://localhost:3000/detail/" + id;
+  }
+  setTitle(title) {
+    // alert("title " + title);
+    // console.log(this.props);
+    this.props.setTitleRedux(title);
   }
 
   viewAll(title) {
@@ -45,11 +44,7 @@ class ProductLine extends Component {
   render() {
     const listProduct = this.props.data.map(product => (
       <div className="card product col-md-3 ml-1 mr-1">
-        <img
-          className="mt-3 card-img-top"
-          src={product1}
-          alt="Card image cap"
-        />
+        <img className="mt-3 card-img-top" src={product.image[0].url} alt="Card image cap" />
         <div className="card-body">
           <h5 className="card-title">{product.name}</h5>
           <p className="card-text">{product.price} VND</p>
@@ -61,7 +56,9 @@ class ProductLine extends Component {
           </button>{" "}
           <button
             className="btn btn-primary"
-            onClick={() => {this.props.addToCart(product)}}
+            onClick={() => {
+              this.props.addToCart(product);
+            }}
           >
             Add to Cart
           </button>
@@ -77,10 +74,6 @@ class ProductLine extends Component {
               <p className="title">{this.props.title}</p>
             </Col>
             <Col>
-              {/* <Redirect to={{
-                                pathname: "/product",
-                                state: { title: this.props.title }
-                            }}> */}
               <Link
                 to="/product"
                 onClick={() => this.setTitle(this.props.title)}
