@@ -3,6 +3,8 @@ import Carousel from '../Carousel/Carousel';
 import TopBar from '../TopBar/TopBar';
 import ProductLine from '../ProductLine/ProductLine';
 import axios from 'axios';
+import { Row } from 'reactstrap';
+import PaginationComponent from '../Pagination/Pagination';
 
 class Home extends Component {
     constructor(props) {
@@ -10,13 +12,67 @@ class Home extends Component {
         this.state = {
             promotionProduct: Array().fill(null),
             bestSaleProduct: Array().fill(null),
-            fourProduct: Array().fill(null)
+            fourProduct: Array().fill(null),
+            products: [],
+            maxPage: 0,
+            pageSize: 1,
+            currentPage: 1
         }
+        this.changeKeyword = this.changeKeyword.bind(this);
+        this.getSearchProduct = this.getSearchProduct.bind(this);
+        this.changeCurrentPage = this.changeCurrentPage.bind(this);
     }
 
-    componentWillMount() {
+    changeKeyword(value) {
+        this.setState({
+            keyword: value
+        })
+    }
+
+    changeCurrentPage(index) {
+        this.setState({
+            currentPage: index
+        })
+    }
+
+    getSearchProduct() {
+        let pageParam = encodeURIComponent(this.state.currentPage);
+        let pageSizeParam = encodeURIComponent(this.state.pageSize);
+        let searchValueParam = encodeURIComponent(this.state.keyword);
+        console.log(this.state.keyword);
+        fetch("http://localhost:8080/products/getProductByName?page=" + pageParam + "&element=" + pageSizeParam + "&searchValue=" + searchValueParam, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+            }
+
+        }).then(
+            (result) => {
+                console.log(result);
+                if (result.status === 200) {
+                    // alert("create success");
+                    // this.props.history.push('view-new-request');
+                    result.json().then((data) => {
+                        this.setState({
+                            products: data.data,
+                            maxPage: data.maxPage
+                        })
+                    }
+                    )
+                }
+                //    else if(result.status === 401) {
+                //     localStorage.setItem("isLoggedIn", false);
+                //     this.props.history.push('/login-page')
+                //   }
+
+            }
+        )
+        //   event.preventDefault();
+    }
+
+    async componentWillMount() {
         let promotionProductList = Array().fill(null);
-        axios.get('http://localhost:8080/products/promotionProduct')
+        await axios.get('http://localhost:8080/products/promotionProduct')
             .then(response => {
                 promotionProductList = response.data;
                 // console.log("data " + dataProduct);
@@ -27,7 +83,7 @@ class Home extends Component {
                 console.log(error);
             });
         let bestSalesProductList = Array().fill(null);
-        axios.get('http://localhost:8080/products/bestSalesProduct')
+        await axios.get('http://localhost:8080/products/bestSalesProduct')
             .then(response => {
                 bestSalesProductList = response.data;
                 // console.log("data " + dataProduct);
@@ -38,7 +94,7 @@ class Home extends Component {
                 console.log(error);
             });
         let fourProductList = Array().fill(null);
-        axios.get('http://localhost:8080/products/fourProduct')
+        await axios.get('http://localhost:8080/products/fourProduct')
             .then(response => {
                 fourProductList = response.data;
                 // console.log("data " + dataProduct);
@@ -51,22 +107,50 @@ class Home extends Component {
     }
 
     render() {
-        // const person = {
-        //     name: "xgqfrms",
-        //     age: 23,
-        //     country: "China"
-        // };
+        let searchProducts
+        if (this.state.products.length !== 0) {
+            searchProducts = this.state.products.map((product) =>
+                <div className="card product col-md-3 ml-1 mr-1 mb-1 mt-1">
+                    {/* product.map() */}
+                    <img className="mt-3 card-img-top" src={product.image[0].url} alt="Card image cap" />
+                    <div className="card-body">
+                        <h5 className="card-title">{product.name}</h5>
+                        <p className="card-text">{product.price} VND</p>
+                        {/* <button onClick={() => this.goToDetail(product.id)} className="btn btn-primary">View detail</button>{' '} */}
+                        <a href="#" className="btn btn-primary">Add to Cart</a>
+                    </div>
+                </div>
+            )
+        }
+
 
         return (
             <div>
-                <Carousel />
-                <br />
-                <ProductLine data={this.state.promotionProduct} title={"Promotion"}/>
-                <br />
-                <ProductLine data={this.state.bestSaleProduct} title={"Best Sales"}/>
-                <br />
-                <ProductLine data={this.state.fourProduct} title={"Racket"}/>
-                <br />
+                <TopBar onChangeKeyword={this.changeKeyword} onChangeData={this.getSearchProduct} />
+                {(this.state.products.length === 0) ?
+                    (<div className="container-fluid col-md-11">
+                        <Carousel />
+                        <br />
+                        <ProductLine data={this.state.promotionProduct} title={"Promotion"} />
+                        <br />
+                        <ProductLine data={this.state.bestSaleProduct} title={"Best Sales"} />
+                        <br />
+                        <ProductLine data={this.state.fourProduct} title={"Racket"} />
+                        <br />
+                    </div>) :
+                    (<div className="container-fluid col-md-11">
+                        <br />
+                        <Row>
+                            <p className="h3">Search for [{this.state.keyword}]</p>
+                        </Row>
+                        {searchProducts}
+                        <PaginationComponent
+                            maxPage={this.state.maxPage}
+                            currentPage={this.state.currentPage}
+                            onChange={this.getSearchProduct}
+                            changePage={this.changeCurrentPage}
+                        ></PaginationComponent>
+                    </div>)}
             </div>
         )
     }
