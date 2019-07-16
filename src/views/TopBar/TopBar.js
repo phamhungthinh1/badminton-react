@@ -4,6 +4,7 @@ import "font-awesome/css/font-awesome.min.css";
 import "jquery/dist/jquery.min.js";
 import "bootstrap/dist/js/bootstrap.min.js";
 import LoginModal from "../LoginModal/LoginModal";
+import ShoppingCartModal from "../ShoppingCartModal/ShoppingCartModal";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
@@ -66,7 +67,6 @@ class TopBar extends Component {
   async setKeyword() {
     if (this.state.keyword !== "") {
       // this.props.setKeywordRedux(this.state.keyword);
-      // console.log(this.state.keyword)
       await this.props.onChangeKeyword(this.state.keyword);
       this.props.onChangeData();
     }
@@ -87,25 +87,23 @@ class TopBar extends Component {
 
           {/* <!-- search bar --> */}
           <div className="col-md-6">
-            <form action="" className="form-inline mw-100">
-              <div className="input-group w-100">
-                <input
-                  className="form-control border"
-                  type="text"
-                  placeholder="Search"
-                  aria-label="Search"
-                  id="search"
-                />
-                <div className="input-group-append">
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => this.setKeyword()}
-                  >
-                    <i className="fa fa-search" />
-                  </button>
-                </div>
+            <div className="input-group w-100">
+              <input
+                className="form-control border"
+                type="text"
+                placeholder="Search"
+                aria-label="Search"
+                id="search"
+              />
+              <div className="input-group-append">
+                <button
+                  className="btn btn-primary"
+                  onClick={() => this.setKeyword()}
+                >
+                  <i className="fa fa-search" />
+                </button>
               </div>
-            </form>
+            </div>
           </div>
           {/* <!-- close search bar --> */}
           <div className="col-md-auto">

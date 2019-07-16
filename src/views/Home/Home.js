@@ -39,7 +39,6 @@ class Home extends Component {
         let pageParam = encodeURIComponent(this.state.currentPage);
         let pageSizeParam = encodeURIComponent(this.state.pageSize);
         let searchValueParam = encodeURIComponent(this.state.keyword);
-        console.log(this.state.keyword);
         fetch("http://localhost:8080/products/getProductByName?page=" + pageParam + "&element=" + pageSizeParam + "&searchValue=" + searchValueParam, {
             method: 'GET',
             headers: {
@@ -107,7 +106,7 @@ class Home extends Component {
     }
 
     render() {
-        let searchProducts
+        let searchProducts;
         if (this.state.products.length !== 0) {
             searchProducts = this.state.products.map((product) =>
                 <div className="card product col-md-3 ml-1 mr-1 mb-1 mt-1">

@@ -39,8 +39,6 @@ class ProductLine extends Component {
   }
 
   setTitle(title) {
-    // alert("title " + title);
-    // console.log(this.props);
     this.props.setTitleRedux(title);
   }
 
@@ -49,13 +47,8 @@ class ProductLine extends Component {
   }
 
   viewAll(title) {
-    // this.props.history.push({
-    //     pathname: '/product',
-    //     state: { title: this.props.title }
-    // })
-    // console.log(this.props.title);
+
     window.location = "http://localhost:3000/product?title=" + title;
-    // return "http://localhost:3000/product?title=" + title;
   }
 
   addToCart = product => {
@@ -102,19 +95,19 @@ class ProductLine extends Component {
                 src={product[0].image[0].url}
               />
               <MDBCardBody>
-                <MDBCardTitle>{product.name}</MDBCardTitle>
-                <MDBCardText>{product.price}</MDBCardText>
+                <MDBCardTitle>{product[0].name}</MDBCardTitle>
+                <MDBCardText>{product[0].price}</MDBCardText>
 
                 <MDBBtn
                   color="primary"
-                  onClick={() => this.goToDetail(product.id)}
+                  onClick={() => this.goToDetail(product[0].id)}
                 >
                   View Detail
                 </MDBBtn>
                 <MDBBtn
                   color="primary"
                   onClick={() => {
-                    this.props.addToCart(product);
+                    this.props.addToCart(product[0]);
                   }}
                 >
                   Add to Cart
@@ -129,18 +122,18 @@ class ProductLine extends Component {
                 src={product[1].image[0].url}
               />
               <MDBCardBody>
-                <MDBCardTitle>{product.name}</MDBCardTitle>
-                <MDBCardText>{product.price}</MDBCardText>
+                <MDBCardTitle>{product[1].name}</MDBCardTitle>
+                <MDBCardText>{product[1].price}</MDBCardText>
                 <MDBBtn
                   color="primary"
-                  onClick={() => this.goToDetail(product.id)}
+                  onClick={() => this.goToDetail(product[1].id)}
                 >
                   View Detail
                 </MDBBtn>
                 <MDBBtn
                   color="primary"
                   onClick={() => {
-                    this.props.addToCart(product);
+                    this.props.addToCart(product[1]);
                   }}
                 >
                   Add to Cart
@@ -155,11 +148,11 @@ class ProductLine extends Component {
                 src={product[2].image[0].url}
               />
               <MDBCardBody>
-                <MDBCardTitle>{product.name}</MDBCardTitle>
-                <MDBCardText>{product.price}</MDBCardText>
+                <MDBCardTitle>{product[2].name}</MDBCardTitle>
+                <MDBCardText>{product[2].price}</MDBCardText>
                 <MDBBtn
                   color="primary"
-                  onClick={() => this.goToDetail(product.id)}
+                  onClick={() => this.goToDetail(product[2].id)}
                 >
                   View Detail
                 </MDBBtn>
@@ -198,7 +191,7 @@ class ProductLine extends Component {
         <MDBContainer>
           <MDBCarousel
             activeItem={1}
-            length={4}
+            length={3}
             slide={true}
             showControls={true}
             showIndicators={true}
