@@ -3,7 +3,7 @@ import { REMOVE_QUANTITY_ITEM_SHOPPING } from "../action/types";
 import { DELETE_ITEM_SHOPPING } from "../action/types";
 import { GET_SHOPPING_CART } from "../action/types";
 
-const STATE = {
+let STATE = {
   product: []
 };
 
@@ -25,9 +25,20 @@ export const ShoppingCartReducers = (state = STATE, action) => {
       }
       break;
     case REMOVE_QUANTITY_ITEM_SHOPPING:
-      state = {
-        ...state
-      };
+      var listProduct = state.product;
+      const itemIndex = listProduct.findIndex(
+        product => product.id === action.product.id
+      );
+      if (listProduct[itemIndex].count === 1) {
+        listProduct = listProduct.filter(
+          product => product.id !== listProduct[itemIndex].id
+        );
+        console.log(listProduct);
+        state.product = listProduct;
+        break;
+      } else {
+        listProduct[itemIndex].count -= 1;
+      }
       break;
     case DELETE_ITEM_SHOPPING:
       const items = state.product.filter(

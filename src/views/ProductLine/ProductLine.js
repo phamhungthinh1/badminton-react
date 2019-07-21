@@ -6,10 +6,8 @@ import axios from "axios";
 import { Row, Col, Button } from "reactstrap";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import {API_URL} from "../../constants/config";
 
-// import OwlCarousel from 'react-owl-carousel';
-// import 'owl.carousel/dist/assets/owl.carousel.css';
-// import 'owl.carousel/dist/assets/owl.theme.default.css';
 import {
   MDBCarousel,
   MDBCarouselInner,
@@ -24,6 +22,7 @@ import {
   MDBCardText,
   MDBBtn
 } from "mdbreact";
+import { SET_TITLE } from "../../redux/action/types";
 
 class ProductLine extends Component {
   constructor(props) {
@@ -47,7 +46,6 @@ class ProductLine extends Component {
   }
 
   viewAll(title) {
-
     window.location = "http://localhost:3000/product?title=" + title;
   }
 
@@ -77,7 +75,11 @@ class ProductLine extends Component {
   }
 
   componentDidMount() {
-    // this.handleCarouselItem();
+    console.log(API_URL);
+  }
+
+  getLinkDetail(id) {
+    return "/detail/" + id;
   }
 
   render() {
@@ -93,19 +95,43 @@ class ProductLine extends Component {
               <MDBCardImage
                 className="img-fluid"
                 src={product[0].image[0].url}
+                style={{width: "100%", height: 300}}
               />
               <MDBCardBody>
                 <MDBCardTitle>{product[0].name}</MDBCardTitle>
-                <MDBCardText>{product[0].price}</MDBCardText>
-
+                {product[0].promotion !== null &&
+                product[0].promotion !== undefined ? (
+                  <div>
+                    <span
+                      style={{ textDecoration: "line-through" }}
+                      className="card-text"
+                    >
+                      {product[0].price} VND
+                    </span>
+                    <span
+                      style={{
+                        fontWeight: "bold",
+                        color: "red",
+                        marginLeft: 5
+                      }}
+                      className="card-text"
+                    >
+                      {product[0].price * product[0].promotion.discount} VND
+                    </span>
+                  </div>
+                ) : (
+                  <p className="card-text">{product[0].price} VND</p>
+                )}
+                <MDBBtn color="primary">
+                  <Link
+                    style={{ textDecoration: "none", color: "white" }}
+                    to={this.getLinkDetail(product[0].id)}
+                  >
+                    View Detail
+                  </Link>
+                </MDBBtn>{" "}
                 <MDBBtn
-                  color="primary"
-                  onClick={() => this.goToDetail(product[0].id)}
-                >
-                  View Detail
-                </MDBBtn>
-                <MDBBtn
-                  color="primary"
+                  color="success"
                   onClick={() => {
                     this.props.addToCart(product[0]);
                   }}
@@ -120,18 +146,43 @@ class ProductLine extends Component {
               <MDBCardImage
                 className="img-fluid"
                 src={product[1].image[0].url}
+                style={{width: "100%", height: 300}}
               />
               <MDBCardBody>
                 <MDBCardTitle>{product[1].name}</MDBCardTitle>
-                <MDBCardText>{product[1].price}</MDBCardText>
+                {product[1].promotion !== null &&
+                product[1].promotion !== undefined ? (
+                  <div>
+                    <span
+                      style={{ textDecoration: "line-through" }}
+                      className="card-text"
+                    >
+                      {product[1].price} VND
+                    </span>
+                    <span
+                      style={{
+                        fontWeight: "bold",
+                        color: "red",
+                        marginLeft: 5
+                      }}
+                      className="card-text"
+                    >
+                      {product[1].price * product[1].promotion.discount} VND
+                    </span>
+                  </div>
+                ) : (
+                  <p className="card-text">{product[1].price} VND</p>
+                )}
+                <MDBBtn color="primary">
+                  <Link
+                    style={{ textDecoration: "none", color: "white" }}
+                    to={this.getLinkDetail(product[1].id)}
+                  >
+                    View Detail
+                  </Link>
+                </MDBBtn>{" "}
                 <MDBBtn
-                  color="primary"
-                  onClick={() => this.goToDetail(product[1].id)}
-                >
-                  View Detail
-                </MDBBtn>
-                <MDBBtn
-                  color="primary"
+                  color="success"
                   onClick={() => {
                     this.props.addToCart(product[1]);
                   }}
@@ -146,20 +197,45 @@ class ProductLine extends Component {
               <MDBCardImage
                 className="img-fluid"
                 src={product[2].image[0].url}
+                style={{width: "100%", height: 300}}
               />
               <MDBCardBody>
                 <MDBCardTitle>{product[2].name}</MDBCardTitle>
-                <MDBCardText>{product[2].price}</MDBCardText>
+                {product[2].promotion !== null &&
+                product[2].promotion !== undefined ? (
+                  <div>
+                    <span
+                      style={{ textDecoration: "line-through" }}
+                      className="card-text"
+                    >
+                      {product[2].price} VND
+                    </span>
+                    <span
+                      style={{
+                        fontWeight: "bold",
+                        color: "red",
+                        marginLeft: 5
+                      }}
+                      className="card-text"
+                    >
+                      {product[2].price * product[2].promotion.discount} VND
+                    </span>
+                  </div>
+                ) : (
+                  <p className="card-text">{product[2].price} VND</p>
+                )}
+                <MDBBtn color="primary">
+                  <Link
+                    style={{ textDecoration: "none", color: "white" }}
+                    to={this.getLinkDetail(product[2].id)}
+                  >
+                    View Detail
+                  </Link>
+                </MDBBtn>{" "}
                 <MDBBtn
-                  color="primary"
-                  onClick={() => this.goToDetail(product[2].id)}
-                >
-                  View Detail
-                </MDBBtn>
-                <MDBBtn
-                  color="primary"
+                  color="success"
                   onClick={() => {
-                    this.props.addToCart(product);
+                    this.props.addToCart(product[2]);
                   }}
                 >
                   Add to Cart
@@ -216,7 +292,7 @@ const mapDispatchToProps = dispatch => {
   return {
     setTitleRedux: title => {
       dispatch({
-        type: "SET_TITLE",
+        type: SET_TITLE,
         payload: title
       });
     },

@@ -3,6 +3,7 @@ import Home from './views/Home/Home';
 import PageDetail from './views/PageDetail/PageDetail';
 import ProductList from './views/ProductList/ProductList';
 import SearchProduct from './views/SearchPage/SearchProduct';
+import Payment from './views/PaymentPage/Payment'
 
 const routes = [
     {
@@ -21,9 +22,14 @@ const routes = [
         main: () => <ProductList/>
     },
     {
-        path : '/searchproduct',
+        path : '/searchproduct/:keyword',
         exact : false,
-        main: () => <SearchProduct/>
+        main: ({match}) => <SearchProduct match={match}/>
+    },
+    {
+        path : '/payment',
+        exact : false,
+        main: () => <Payment/>
     }
 ];
 export default routes;

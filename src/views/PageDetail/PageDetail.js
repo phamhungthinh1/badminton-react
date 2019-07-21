@@ -9,7 +9,6 @@ class PageDetail extends Component {
     render() {
         return (
             <div>
-                <TopBar/>
                 <PageDetailBody {...this.props}/>
             </div>
         )

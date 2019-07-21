@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { Button, Modal, Table } from "react-bootstrap";
 import { connect } from "react-redux";
+import { SET_STATUS } from "../../redux/action/types";
+import { Link } from "react-router-dom";
 class ShoppingCartModal extends Component {
-  
   constructor(props, context) {
     super(props, context);
 
@@ -12,7 +13,6 @@ class ShoppingCartModal extends Component {
       show: false,
       product: []
     };
-    
   }
 
   handleDeleteItem(productId) {
@@ -25,8 +25,6 @@ class ShoppingCartModal extends Component {
   }
 
   handleAddItem(product) {
-    console.log("add item");
-    
     this.props.addItem(product);
     const listShoppingProduct = this.props.shoppingCart.product;
     this.setState({
@@ -35,6 +33,15 @@ class ShoppingCartModal extends Component {
     });
   }
 
+  handleSubItem(product) {
+    this.props.subItem(product);
+    const listShoppingProduct = this.props.shoppingCart.product;
+    console.log(listShoppingProduct);
+    this.setState({
+      show: true,
+      product: listShoppingProduct
+    });
+  }
 
   handleClose() {
     this.setState({ show: false });
@@ -48,9 +55,29 @@ class ShoppingCartModal extends Component {
     });
   }
 
-
+  handleOpenPaymentPopup() {
+    const listShoppingProduct = this.props.shoppingCart.product;
+    let token = localStorage.getItem("token");
+    if (token === null || token === undefined) {
+      alert("You must login first to payment");
+    } else if (listShoppingProduct.length === 0) {
+      alert("No item to payment");
+    } else this.handleClose();
+  }
 
   render() {
+    const token = localStorage.getItem("token");
+    const { product } = this.state;
+    const renderShoppingItem = product.map((product, i) => (
+      <TableRow
+        key={i}
+        data={product}
+        number={i}
+        onDeleteItem={() => this.handleDeleteItem(product.id)}
+        onAddItem={() => this.handleAddItem(product)}
+        onSubItem={() => this.handleSubItem(product)}
+      />
+    ));
     return (
       <div>
         <a
@@ -62,41 +89,48 @@ class ShoppingCartModal extends Component {
           data-placement="bottom"
           title="Tài khoản"
         />
-        <Modal show={this.state.show} onHide={this.handleClose}>
+        <Modal show={this.state.show} onHide={this.handleClose} size="lg">
           <Modal.Header closeButton>
             <Modal.Title>Shopping Cart</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>STT</th>
-                  <th>Id</th>
-                  <th>Name</th>
-                  <th>Price</th>
-                  <th>Amount</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {this.state.product.map((product, i) => (
-                  <TableRow
-                    key={i}
-                    data={product}
-                    number={i}
-                    onDeleteItem={() => this.handleDeleteItem(product.id)}
-                    onAddItem={() => this.handleAddItem(product)}
-                  />
-                ))}
-              </tbody>
-            </Table>
+            {product.length > 0 ? (
+              <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    <th>STT</th>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>{renderShoppingItem}</tbody>
+              </Table>
+            ) : (
+              <h3>No item !!!</h3>
+            )}
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleClose}>
               Cancel
             </Button>
-            <Button variant="primary" onClick={this.handleClose}>
-              Payment
+            <Button
+              variant="primary"
+              onClick={() => this.handleOpenPaymentPopup()}
+            >
+              {product.length &&
+              !(token === null || token === undefined) > 0 ? (
+                <Link
+                  style={{ textDecoration: "none", color: "white" }}
+                  to="/payment"
+                >
+                  Payment
+                </Link>
+              ) : (
+                <div>Payment</div>
+              )}
             </Button>
           </Modal.Footer>
         </Modal>
@@ -107,24 +141,37 @@ class ShoppingCartModal extends Component {
 
 class TableRow extends Component {
   render() {
-    var {id, name, price, count } = this.props.data
+    var { id, name, price, count, promotion } = this.props.data;
     return (
       <tr>
         <td>{this.props.number + 1}</td>
         <td>{id}</td>
         <td>{name}</td>
-        <td>{price * count}</td>
+        {promotion !== undefined && promotion !== null ? (
+          <td>{price * count * promotion.discount}</td>
+        ) : (
+          <td>{price * count}</td>
+        )}
         <td>{count}</td>
         <td>
-        <button
-            className="btn btn-primary"
+          <p
+            className="btn btn-success"
+            style={{ cursor: "pointer" }}
+            onClick={this.props.onSubItem}
+          >
+            -
+          </p>{" "}
+          <p
+            className="btn btn-warning"
+            style={{ cursor: "pointer" }}
             onClick={this.props.onAddItem}
           >
-            Add
-          </button>
-          <button className="primary" onClick={this.props.onDeleteItem}>
+            +
+          </p>
+          {"  "}
+          <p className="btn btn-primary" onClick={this.props.onDeleteItem}>
             Delete
-          </button>
+          </p>
         </td>
       </tr>
     );
@@ -149,6 +196,18 @@ const mapDispatchToProps = dispatch => {
       dispatch({
         type: "ADD_QUANTITY_ITEM_SHOPPING",
         product: product
+      });
+    },
+    subItem: product => {
+      dispatch({
+        type: "REMOVE_QUANTITY_ITEM_SHOPPING",
+        product: product
+      });
+    },
+    setStatusModal: status => {
+      dispatch({
+        type: SET_STATUS,
+        payload: status
       });
     }
   };

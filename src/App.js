@@ -13,7 +13,7 @@ class App extends Component {
 
 
           <Router>
-            {/* <TopBar /> */}
+            <TopBar />
             <Switch>{this.showContentMenus(Routes)}</Switch>
           </Router>
 

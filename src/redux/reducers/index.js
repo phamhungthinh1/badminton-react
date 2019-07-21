@@ -7,5 +7,4 @@ export default combineReducers({
     product: ProductReducers,
     shoppingCart: ShoppingCartReducers,
     search: SearchReducers
-
 });

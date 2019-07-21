@@ -5,8 +5,11 @@ import "jquery/dist/jquery.min.js";
 import "bootstrap/dist/js/bootstrap.min.js";
 import LoginModal from "../LoginModal/LoginModal";
 import ShoppingCartModal from "../ShoppingCartModal/ShoppingCartModal";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import { Button } from "reactstrap";
+import { Link } from "react-router-dom";
+import RegisterModal from "../RegisterModal/RegisterModal";
+import { API_URL } from "../../constants/config";
 
 class TopBar extends Component {
   constructor(props) {
@@ -14,7 +17,8 @@ class TopBar extends Component {
     this.state = {
       keyword: "",
       products: [],
-      maxPage: 0
+      maxPage: 0,
+      account: ""
     };
     this.setKeyword = this.setKeyword.bind(this);
     this.changeKeyword = this.changeKeyword.bind(this);
@@ -27,12 +31,17 @@ class TopBar extends Component {
     });
   }
 
+  handleLogout = () => {
+    localStorage.removeItem("token");
+    this.setState({ account: "" });
+  };
+
   getSearchProduct() {
     let pageParam = encodeURIComponent(this.state.currentPage);
     let pageSizeParam = encodeURIComponent(this.state.pageSize);
     let searchValueParam = encodeURIComponent(this.state.keyword);
-    fetch(
-      "http://localhost:8080/products/getProductByName?page=" +
+    fetch(API_URL + 
+      "/products/getProductByName?page=" +
         pageParam +
         "&element=" +
         pageSizeParam +
@@ -65,23 +74,29 @@ class TopBar extends Component {
   }
 
   async setKeyword() {
-    if (this.state.keyword !== "") {
-      // this.props.setKeywordRedux(this.state.keyword);
-      await this.props.onChangeKeyword(this.state.keyword);
-      this.props.onChangeData();
-    }
+    await this.props.onChangeKeyword(this.state.keyword);
+    this.props.onChangeData();
+  }
+
+  goToSearch() {
+    window.location =
+      "http://localhost:3000/searchproduct/" + this.state.keyword;
   }
 
   render() {
+    let token = localStorage.getItem("token");
+    let username = localStorage.getItem("username");
     return (
       <nav className="navbar bg-dark navbar-dark container-fluid">
-        <LoginModal />
         <div className="row w-100">
           {/* <!-- icon or logo --> */}
           <div className="col-md-auto">
-            <a className="navbar-brand" href="/">
-              Badminton Shop Online
-            </a>
+            <Link
+              style={{ textDecoration: "none", color: "white"}}
+              to="/"
+            >
+              <h5>Badminton Shop Online</h5>
+            </Link>
           </div>
           {/* <!-- close logo --> */}
 
@@ -94,11 +109,13 @@ class TopBar extends Component {
                 placeholder="Search"
                 aria-label="Search"
                 id="search"
+                value={this.state.keyword}
+                onChange={this.changeKeyword}
               />
               <div className="input-group-append">
                 <button
                   className="btn btn-primary"
-                  onClick={() => this.setKeyword()}
+                  onClick={() => this.goToSearch()}
                 >
                   <i className="fa fa-search" />
                 </button>
@@ -110,15 +127,26 @@ class TopBar extends Component {
             <ShoppingCartModal />
           </div>
           <div className="col-md-auto">
-            <a
-              href=""
-              className="navbar-brand fa fa-user fa-2x"
-              role="button"
-              data-toggle="modal"
-              data-placement="bottom"
-              title="Tài khoản"
-              data-target="#loginDialog"
-            />
+            {token === null || token === undefined ? (
+              <LoginModal
+                loadUser={account => this.setState({ account: account })}
+              />
+            ) : (
+              <div>
+                <b style={{ color: "white", paddingRight: 10 }}>
+                  Hello, {username}
+                </b>
+                <Button onClick={() => this.handleLogout()}>Logout</Button>
+              </div>
+            )}
+          </div>
+          <div className="col-md-auto">
+          {token === null || token === undefined ? (
+              <RegisterModal />
+            ) : (
+              <div>
+              </div>
+            )}
           </div>
         </div>
       </nav>
